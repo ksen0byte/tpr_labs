@@ -34,6 +34,7 @@ public interface Relation {
     BinaryRelation transitiveClosure();
     BinaryRelation symmetricPart();
     BinaryRelation asymmetricPart();
+    BinaryRelation relationFactorization();
 
 
 }

@@ -1,6 +1,10 @@
 package lab01;
 
+import lab02.FactorizationClass;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BinaryRelation implements Relation {
 
@@ -416,4 +420,51 @@ public class BinaryRelation implements Relation {
         BinaryRelation symmetricPart = this.symmetricPart();
         return this.difference(symmetricPart);
     }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Override
+    public BinaryRelation relationFactorization() {
+        List<FactorizationClass> factorizationClasses = new ArrayList<>();
+        int[][] symmetricPart = this.symmetricPart().get();
+
+        for (int i = 0; i < symmetricPart.length; i++) {
+            int k = i + 1;
+            if (factorizationClasses.stream().anyMatch(fc -> fc.getElements().contains(k))) continue;
+
+            int[] row = symmetricPart[i];
+            FactorizationClass factorizationClass = new FactorizationClass(k);
+            for (int j = k; j < symmetricPart[i].length; j++) {
+                if (Arrays.equals(row, symmetricPart[j])) {
+                    factorizationClass.addElement(j + 1);
+                }
+            }
+            factorizationClasses.add(factorizationClass);
+        }
+
+        int size = factorizationClasses.size();
+
+        for (FactorizationClass factorizationClass : factorizationClasses) {
+            List<FactorizationClass> connectedClasses = factorizationClass.getConnectedClasses();
+            for (Integer rowIndex : factorizationClass.getElements()) {
+                int[] row = this.matrix[rowIndex - 1];
+                for (int i = 0; i < row.length; i++) {
+                    if (row[i] == 1) {
+                        int k = i + 1;
+                        FactorizationClass connectedClass = factorizationClasses.stream().filter(fc -> fc.getElements().contains(k)).findAny().get();
+                        connectedClasses.add(connectedClass);
+                    }
+                }
+            }
+        }
+
+        int[][] result = new int[size][size];
+        for (FactorizationClass factorizationClass : factorizationClasses) {
+            factorizationClass.getConnectedClasses().forEach(connectedClass
+                    -> result[factorizationClass.getKey() - 1][connectedClass.getKey() - 1] = 1);
+
+        }
+
+        return new BinaryRelation(result);
+    }
+
 }

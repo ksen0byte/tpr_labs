@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class BinaryRelationTest {
     private int[][] matrix1;
@@ -13,7 +13,7 @@ public class BinaryRelationTest {
     private int[][] matrix3;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         matrix1 = new int[][]{
                 {1, 0, 0, 0, 0},
                 {1, 1, 0, 1, 1},
@@ -104,7 +104,7 @@ public class BinaryRelationTest {
     }
 
     @Test
-    public void testisEquivalent_2x2() {
+    public void testIsEquivalent_2x2() {
         int[][] m = {
                 {1, 0},
                 {0, 1}
@@ -112,5 +112,30 @@ public class BinaryRelationTest {
 
         BinaryRelation binaryRelation = new BinaryRelation(m);
         assertTrue(binaryRelation.isEquivalent());
+    }
+
+    @Test
+    public void testRelationFactorization() {
+        int[][] m = {
+                {1, 1, 1, 0, 0, 0},
+                {0, 1, 1, 0, 0, 0},
+                {0, 1, 1, 0, 0, 0},
+                {0, 0, 0, 1, 0, 1},
+                {0, 1, 1, 1, 1, 1},
+                {0, 0, 0, 1, 0, 1}
+        };
+
+        BinaryRelation binaryRelation = new BinaryRelation(m);
+        BinaryRelation relationFactorization = binaryRelation.relationFactorization();
+
+        int[][] expected = {
+                {1, 1, 0, 0},
+                {0, 1, 0, 0},
+                {0, 0, 1, 0},
+                {0, 1, 1, 1}
+        };
+
+        assertTrue(Arrays.deepEquals(expected, relationFactorization.get()));
+
     }
 }
