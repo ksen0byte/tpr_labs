@@ -76,7 +76,7 @@ public class MetricRelationTest {
         MetricRelation qRelation = new MetricRelation(q);
         double[][] result = pRelation.composition(qRelation).get();
 
-        System.out.println(Arrays.deepToString(result));
+        System.out.println(pRelation.composition(qRelation));
 
         assertTrue(Arrays.deepEquals(result, expected));
     }

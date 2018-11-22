@@ -1,5 +1,7 @@
 package lab03;
 
+import java.text.DecimalFormat;
+
 public class MetricRelation {
     private double[][] matrix;
     private TransitiveType type;
@@ -169,6 +171,22 @@ public class MetricRelation {
         }
 
         return new MetricRelation(result);
+
+    }
+
+    @Override
+    public String toString() {
+        DecimalFormat dc = new DecimalFormat("#.##");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Binary relation of type ").append(type).append(" : \n");
+
+        for (double[] aMatrix : matrix) {
+            for (int j = 0; j < size; j++) {
+                sb.append(" ").append(String.format("%6s", dc.format(aMatrix[j])));
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
 
     }
 }
