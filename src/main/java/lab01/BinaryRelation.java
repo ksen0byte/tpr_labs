@@ -9,7 +9,7 @@ import java.util.List;
 public class BinaryRelation implements Relation {
 
     private int[][] matrix;
-    private int size;
+    protected int size;
 
     public BinaryRelation(MatrixType matrixType, int size) {
         this.size = size;
@@ -275,7 +275,7 @@ public class BinaryRelation implements Relation {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Matrix: \n");
+        sb.append("Binary relation: \n");
 
         for (int[] aMatrix : matrix) {
             for (int j = 0; j < size; j++) {
