@@ -35,6 +35,7 @@ public interface Relation {
     BinaryRelation symmetricPart();
     BinaryRelation asymmetricPart();
     BinaryRelation relationFactorization();
+    BinaryRelation relationFactorization(int[][] matrix);
 
 
 }

@@ -406,7 +406,7 @@ public class BinaryRelation implements Relation {
     public BinaryRelation mutualReach() {
         BinaryRelation reach = this.reach();
         BinaryRelation transpose = reach.transpose();
-        return reach.union(transpose);
+        return reach.intersection(transpose);
     }
 
     @Override
@@ -423,18 +423,21 @@ public class BinaryRelation implements Relation {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
-    public BinaryRelation relationFactorization() {
+    public BinaryRelation relationFactorization(int[][] matrix) {
         List<FactorizationClass> factorizationClasses = new ArrayList<>();
-        int[][] symmetricPart = this.symmetricPart().get();
+        int[][] matrixForFactorization = matrix;
+        System.out.println("Mutual reach");
+        System.out.println(Arrays.deepToString(matrixForFactorization));
+        System.out.println();
 
-        for (int i = 0; i < symmetricPart.length; i++) {
+        for (int i = 0; i < matrixForFactorization.length; i++) {
             int k = i + 1;
             if (factorizationClasses.stream().anyMatch(fc -> fc.getElements().contains(k))) continue;
 
-            int[] row = symmetricPart[i];
+            int[] row = matrixForFactorization[i];
             FactorizationClass factorizationClass = new FactorizationClass(k);
-            for (int j = k; j < symmetricPart[i].length; j++) {
-                if (Arrays.equals(row, symmetricPart[j])) {
+            for (int j = k; j < matrixForFactorization[i].length; j++) {
+                if (Arrays.equals(row, matrixForFactorization[j])) {
                     factorizationClass.addElement(j + 1);
                 }
             }
@@ -465,6 +468,62 @@ public class BinaryRelation implements Relation {
         }
 
         return new BinaryRelation(result);
+    }
+
+    @Override
+    public BinaryRelation relationFactorization() {
+        return relationFactorization(this.mutualReach().get());
+    }
+
+    public void printRelationType() {
+        BinaryRelation binaryRelation = this;
+        if (binaryRelation.isReflective()) {
+            System.out.println("reflective");
+        }
+        if (binaryRelation.isAntiReflective()) {
+            System.out.println("anti reflective");
+        }
+        if (binaryRelation.isSymmetric()) {
+            System.out.println("symmetric");
+        }
+        if (binaryRelation.isAsymmetric()) {
+            System.out.println("asymmetric");
+        }
+        if (binaryRelation.isAntisymmetric()) {
+            System.out.println("anti symmetric");
+        }
+        if (binaryRelation.isTransitive()) {
+            System.out.println("transitive");
+        }
+        if (binaryRelation.isAcyclic()) {
+            System.out.println("acyclic");
+        }
+        if (binaryRelation.isConnected()) {
+            System.out.println("connected");
+        }
+
+
+        if (binaryRelation.isTolerant()) {
+            System.out.println("tolerant");
+        }
+        if (binaryRelation.isEquivalent()) {
+            System.out.println("equivalent");
+        }
+        if (binaryRelation.isQuasiOrder()) {
+            System.out.println("quasi order");
+        }
+        if (binaryRelation.isOrder()) {
+            System.out.println("order");
+        }
+        if (binaryRelation.isStrictOrder()) {
+            System.out.println("strict order");
+        }
+        if (binaryRelation.isLinearOrder()) {
+            System.out.println("linear order");
+        }
+        if (binaryRelation.isStrictLinearOrder()) {
+            System.out.println("strict linear order");
+        }
     }
 
 }

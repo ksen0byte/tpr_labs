@@ -27,12 +27,11 @@ public class Main {
         BinaryRelation Q = new BinaryRelation(q);
         BinaryRelation R = new BinaryRelation(r);
 
-        System.out.println("MATRIX P:");
-        System.out.println(P);
-        System.out.println("\nMATRIX Q:");
-        System.out.println(Q);
-        System.out.println("\nMATRIX R:");
-        System.out.println(R);
+        System.out.println(P.composition(Q));
+
+        System.out.println("P " + P);
+        System.out.println("Q " + Q);
+        System.out.println("R " + R);
 
 
         BinaryRelation result = P.composition(Q);
@@ -46,6 +45,9 @@ public class Main {
         System.out.println("\n(P o Q)/((R!) ^(-1)) :");
         result = result.difference(R.addition().transpose());
         System.out.println(result);
+
+        Intersection intersection = new Intersection(P);
+        System.out.println(intersection);
 
     }
 }

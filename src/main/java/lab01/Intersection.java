@@ -1,5 +1,6 @@
 package lab01;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -7,7 +8,11 @@ import java.util.List;
 
 public class Intersection {
 
-    private List<Holder> result = new ArrayList<>();
+    private List<Holder> holders = new ArrayList<>();
+
+    public Intersection(List<Holder> holders) {
+        this.holders = holders;
+    }
 
     public Intersection(BinaryRelation relation) {
         int[][] matrix = relation.get();
@@ -18,18 +23,22 @@ public class Intersection {
                     holder.addElement(i + 1);
                 }
             }
-            result.add(holder);
+            holders.add(holder);
         }
     }
 
     @Override
     public String toString() {
-        return "Intersection{" + result + '}';
+        return "Intersection{" + holders + '}';
     }
 
     @Data
-    class Holder {
-        private final Integer column;
+    @AllArgsConstructor
+    public static class Holder {
+        public Holder(Integer column){
+            this.column = column;
+        }
+        private Integer column;
         private List<Integer> elements = new ArrayList<>();
 
         void addElement(Integer element) {
@@ -40,5 +49,16 @@ public class Intersection {
         public String toString() {
             return "R(" + column + ") = {" + elements + '}';
         }
+    }
+
+    public BinaryRelation getBinaryRelation(int size) {
+        int[][] matrix = new int[size][size];
+        List<Holder> holders = this.holders;
+        for (Holder holder : holders) {
+            holder.getElements().forEach(el -> {
+                matrix[el - 1][holder.getColumn() - 1] = 1;
+            });
+        }
+        return new BinaryRelation(matrix);
     }
 }
