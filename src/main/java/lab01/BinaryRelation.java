@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 public class BinaryRelation implements Relation {
 
     private int[][] matrix;
@@ -424,25 +426,7 @@ public class BinaryRelation implements Relation {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public BinaryRelation relationFactorization(int[][] matrix) {
-        List<FactorizationClass> factorizationClasses = new ArrayList<>();
-        int[][] matrixForFactorization = matrix;
-        System.out.println("Mutual reach");
-        System.out.println(Arrays.deepToString(matrixForFactorization));
-        System.out.println();
-
-        for (int i = 0; i < matrixForFactorization.length; i++) {
-            int k = i + 1;
-            if (factorizationClasses.stream().anyMatch(fc -> fc.getElements().contains(k))) continue;
-
-            int[] row = matrixForFactorization[i];
-            FactorizationClass factorizationClass = new FactorizationClass(k);
-            for (int j = k; j < matrixForFactorization[i].length; j++) {
-                if (Arrays.equals(row, matrixForFactorization[j])) {
-                    factorizationClass.addElement(j + 1);
-                }
-            }
-            factorizationClasses.add(factorizationClass);
-        }
+        List<FactorizationClass> factorizationClasses = getClassesForFactorization(matrix);
 
         int size = factorizationClasses.size();
 
@@ -471,10 +455,31 @@ public class BinaryRelation implements Relation {
     }
 
     @Override
+    public List<FactorizationClass> getClassesForFactorization(int[][] matrix) {
+        List<FactorizationClass> factorizationClasses = new ArrayList<>();
+        int counter = 1;
+        for (int i = 0; i < matrix.length; i++) {
+            int k = i + 1;
+            if (factorizationClasses.stream().anyMatch(fc -> fc.getElements().contains(k))) continue;
+
+            int[] row = matrix[i];
+            FactorizationClass factorizationClass = new FactorizationClass(counter++, k);
+            for (int j = k; j < matrix[i].length; j++) {
+                if (Arrays.equals(row, matrix[j])) {
+                    factorizationClass.addElement(j + 1);
+                }
+            }
+            factorizationClasses.add(factorizationClass);
+        }
+        return factorizationClasses;
+    }
+
+    @Override
     public BinaryRelation relationFactorization() {
         return relationFactorization(this.mutualReach().get());
     }
 
+    @Override
     public void printRelationType() {
         BinaryRelation binaryRelation = this;
         if (binaryRelation.isReflective()) {
@@ -525,5 +530,59 @@ public class BinaryRelation implements Relation {
             System.out.println("strict linear order");
         }
     }
+
+    @Override
+    public BinaryRelation disparity() {
+        BinaryRelation dominant = new BinaryRelation(this.asymmetricPart().get());
+        BinaryRelation indifferent = new BinaryRelation(this.symmetricPart().get());
+        return (dominant.union(indifferent.union(dominant.transpose())).addition());
+    }
+
+    @Override
+    public Double findDistance(BinaryRelation that) {
+        int[][] m1 = new int[size][size];
+        int[][] m2 = new int[size][size];
+
+        // creating mMatrix
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                m1[i][j] = this.matrix[i][j] - this.matrix[j][i];
+                m2[i][j] = that.matrix[i][j] - that.matrix[j][i];
+            }
+        }
+
+        double distance = 0.;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                distance += abs(m1[i][j] - m2[i][j]);
+            }
+        }
+
+        return distance * 0.5;
+    }
+
+    @Override
+    public Double findStructuralDistance(BinaryRelation that) {
+        int[][] m1 = new int[size][size];
+        int[][] m2 = new int[size][size];
+
+        // creating mMatrix
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                m1[i][j] = this.matrix[i][j] - this.matrix[j][i];
+                m2[i][j] = that.matrix[i][j] - that.matrix[j][i];
+            }
+        }
+
+        double distance = 0.;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                distance += abs(m1[i][j] - m2[i][j]);
+            }
+        }
+
+        return distance * 0.5;
+    }
+
 
 }

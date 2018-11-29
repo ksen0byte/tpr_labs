@@ -2,12 +2,14 @@ package lab03;
 
 import java.text.DecimalFormat;
 
+import static java.lang.Math.abs;
+
 public class MetricRelation {
-    private double[][] matrix;
+    private Double[][] matrix;
     private TransitiveType type;
     private int size;
 
-    public MetricRelation(double[][] matrix) {
+    public MetricRelation(Double[][] matrix) {
         this.matrix = matrix;
         this.size = matrix.length;
         if (isAdditive()) {
@@ -36,11 +38,11 @@ public class MetricRelation {
     }
 
     public MetricRelation intersection(MetricRelation metricRelation) {
-        double[][] left = this.matrix;
-        double[][] right = metricRelation.get();
+        Double[][] left = this.matrix;
+        Double[][] right = metricRelation.get();
         int size = left.length;
 
-        double[][] result = new double[size][size];
+        Double[][] result = new Double[size][size];
         switch (type) {
             case ADDITIVE: {
                 for (int i = 0; i < size; i++) {
@@ -66,15 +68,15 @@ public class MetricRelation {
         return new MetricRelation(result);
     }
 
-    public double[][] get() {
+    public Double[][] get() {
         return this.matrix;
     }
 
     public MetricRelation union(MetricRelation metricRelation) {
-        double[][] left = this.matrix;
-        double[][] right = metricRelation.get();
+        Double[][] left = this.matrix;
+        Double[][] right = metricRelation.get();
 
-        double[][] result = new double[size][size];
+        Double[][] result = new Double[size][size];
         switch (type) {
             case ADDITIVE: {
                 for (int i = 0; i < size; i++) {
@@ -106,10 +108,10 @@ public class MetricRelation {
     }
 
     public MetricRelation difference(MetricRelation metricRelation) {
-        double[][] left = this.matrix;
-        double[][] right = metricRelation.get();
+        Double[][] left = this.matrix;
+        Double[][] right = metricRelation.get();
 
-        double[][] result = new double[size][size];
+        Double[][] result = new Double[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (left[i][j] != 0 && right[i][j] == 0) {
@@ -123,21 +125,21 @@ public class MetricRelation {
     }
 
     public MetricRelation composition(MetricRelation metricRelation) {
-        double[][] left = this.matrix;
-        double[][] right = metricRelation.get();
+        Double[][] left = this.matrix;
+        Double[][] right = metricRelation.get();
 
-        double[][] result = new double[size][size];
+        Double[][] result = new Double[size][size];
 
         switch (type) {
             case ADDITIVE: {
                 for (int i = 0; i < size; i++) {
                     for (int j = 0; j < size; j++) {
                         int counter = 0;
-                        double sum = 0;
+                        Double sum = 0.;
 
                         for (int k = 0; k < size; k++) {
-                            double leftElem = left[i][k];
-                            double rightElem = right[k][j];
+                            Double leftElem = left[i][k];
+                            Double rightElem = right[k][j];
                             if (leftElem != 0 && rightElem != 0) {
                                 counter++;
                                 sum += leftElem + rightElem;
@@ -152,11 +154,11 @@ public class MetricRelation {
                 for (int i = 0; i < size; i++) {
                     for (int j = 0; j < size; j++) {
                         int counter = 0;
-                        double sum = 1;
+                        Double sum = 1.;
 
                         for (int k = 0; k < size; k++) {
-                            double leftElem = left[i][k];
-                            double rightElem = right[k][j];
+                            Double leftElem = left[i][k];
+                            Double rightElem = right[k][j];
                             if (leftElem != 0 && rightElem != 0) {
                                 counter++;
                                 sum *= leftElem * rightElem;
@@ -174,13 +176,27 @@ public class MetricRelation {
 
     }
 
+    public Double findDistance(MetricRelation that) {
+        Double[][] m1 = this.matrix;
+        Double[][] m2 = that.matrix;
+
+        double distance = 0.;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                distance += abs(m1[i][j] - m2[i][j]);
+            }
+        }
+
+        return distance * 0.5;
+    }
+
     @Override
     public String toString() {
         DecimalFormat dc = new DecimalFormat("#.##");
         StringBuilder sb = new StringBuilder();
         sb.append("Binary relation of type ").append(type).append(" : \n");
 
-        for (double[] aMatrix : matrix) {
+        for (Double[] aMatrix : matrix) {
             for (int j = 0; j < size; j++) {
                 sb.append(" ").append(String.format("%6s", dc.format(aMatrix[j])));
             }

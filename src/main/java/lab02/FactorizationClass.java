@@ -8,15 +8,18 @@ import java.util.List;
 
 @Data
 public class FactorizationClass {
-    private static Integer counter = 1;
     private Integer key;
     private List<Integer> elements = new ArrayList<>();
     private List<FactorizationClass> connectedClasses = new ArrayList<>();
 
 
-    public FactorizationClass(Integer... elements) {
-        this.key = counter++;
+    public FactorizationClass(Integer key, Integer... elements) {
+        this.key = key;
         this.elements.addAll(Arrays.asList(elements));
+    }
+
+    public FactorizationClass(List<Integer> elements) {
+        this.elements.addAll(elements);
     }
 
     public void addElement(Integer element) {
@@ -24,4 +27,8 @@ public class FactorizationClass {
     }
 
 
+    @Override
+    public String toString() {
+        return "\n{" + key + " : " + elements + "}";
+    }
 }

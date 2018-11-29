@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BinaryRelationTest {
@@ -136,6 +137,27 @@ public class BinaryRelationTest {
         };
 
         assertTrue(Arrays.deepEquals(expected, relationFactorization.get()));
+
+    }
+
+    @Test
+    public void findDistance() {
+        BinaryRelation b1 = new BinaryRelation(new int[][]{
+                {1, 0, 1, 1, 0},
+                {1, 1, 1, 1, 1},
+                {0, 0, 1, 0, 0},
+                {1, 0, 1, 1, 0},
+                {1, 0, 1, 1, 1}
+        });
+        BinaryRelation b2 = new BinaryRelation(new int[][]{
+                {1, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {0, 0, 0, 1, 0},
+                {1, 0, 0, 1, 1}
+        });
+        assertEquals(b1.findDistance(b2), b2.findDistance(b1), 0.01);
+        assertEquals(b1.findDistance(b2), 9., 0.01);
 
     }
 }

@@ -1,5 +1,9 @@
 package lab01;
 
+import lab02.FactorizationClass;
+
+import java.util.List;
+
 public interface Relation {
     BinaryRelation intersection(BinaryRelation obj);          //перетин
     BinaryRelation union(BinaryRelation obj);                 //об'єднання
@@ -32,10 +36,29 @@ public interface Relation {
     BinaryRelation reach();
     BinaryRelation mutualReach();
     BinaryRelation transitiveClosure();
+
+    /**
+     * Ignorant relation
+     * @return symmetric part
+     */
     BinaryRelation symmetricPart();
+
+    /**
+     * Dominant relation
+     * @return asymetric part
+     */
     BinaryRelation asymmetricPart();
+
+    List<FactorizationClass> getClassesForFactorization(int[][] matrix);
+
     BinaryRelation relationFactorization();
     BinaryRelation relationFactorization(int[][] matrix);
 
 
+    void printRelationType();
+    BinaryRelation disparity();
+
+    Double findDistance(BinaryRelation binaryRelation);
+
+    Double findStructuralDistance(BinaryRelation that);
 }
