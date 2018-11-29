@@ -561,28 +561,4 @@ public class BinaryRelation implements Relation {
         return distance * 0.5;
     }
 
-    @Override
-    public Double findStructuralDistance(BinaryRelation that) {
-        int[][] m1 = new int[size][size];
-        int[][] m2 = new int[size][size];
-
-        // creating mMatrix
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                m1[i][j] = this.matrix[i][j] - this.matrix[j][i];
-                m2[i][j] = that.matrix[i][j] - that.matrix[j][i];
-            }
-        }
-
-        double distance = 0.;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                distance += abs(m1[i][j] - m2[i][j]);
-            }
-        }
-
-        return distance * 0.5;
-    }
-
-
 }
