@@ -86,6 +86,13 @@ public interface Relation {
 
     BinaryRelation disparity();
 
-    Double findDistance(BinaryRelation binaryRelation);
+    String findDistance(BinaryRelation binaryRelation);
 
+    List<Integer> max();
+
+    List<Integer> min();
+
+    List<Integer> major();
+
+    List<Integer> minor();
 }

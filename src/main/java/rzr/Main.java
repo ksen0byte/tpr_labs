@@ -2,6 +2,7 @@ package rzr;
 
 import lab01.BinaryRelation;
 import lab01.Intersection;
+import lab03.MetricRelation;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +24,20 @@ public class Main {
             {1, 1, 1, 1, 0}
 
     });
+    private static MetricRelation SRelation = new MetricRelation(new Double[][]{
+            {0., -1., 1., -2., 0.},
+            {1., 0., 2., -1., 1.},
+            {-1., -2., 0., -3., -1.},
+            {2., 1., 3., 0., 2.},
+            {0., -1., 1., -2., 0.},
+    });
+    private static MetricRelation TRelation = new MetricRelation(new Double[][]{
+            {0., -2., -2., 1., -2.},
+            {2., 0., 0., 3., 0.},
+            {2., 0., 0., 3., 0.},
+            {-1., -3., -3., 0., -3.},
+            {2., 0., 0., 3., 0.},
+    });
     private static BinaryRelation RRelation;
 
     static {
@@ -41,15 +56,52 @@ public class Main {
         ex3();
         ex4();
         ex5();
+        ex6();
+        ex7();
+        ex8();
+    }
 
+    private static void ex8() {
+        System.out.println("=======================> Ex 8 <=======================");
+        System.out.println("S:");
+        System.out.println(SRelation);
+        System.out.println("T:");
+        System.out.println(TRelation);
+        System.out.println("Distance between s and t");
+        System.out.println(SRelation.findDistance(TRelation));
+    }
+
+    private static void ex7() {
+        System.out.println("=======================> Ex 7 <=======================");
+        System.out.println("Q:");
+        System.out.println(QRelation);
+        System.out.println("R:");
+        System.out.println(RRelation);
+        System.out.println("Distance between q and r");
+        System.out.println(QRelation.findDistance(RRelation));
+    }
+
+    private static void ex6() {
         System.out.println("=======================> Ex 6 <=======================");
-
+        System.out.println("R:");
+        System.out.println(RRelation);
+        System.out.println("Maximum:");
+        System.out.println(RRelation.max());
+        System.out.println("Minimum:");
+        System.out.println(RRelation.min());
+        System.out.println("Major:");
+        System.out.println(RRelation.major());
+        System.out.println("Minor:");
+        System.out.println(RRelation.minor());
     }
 
     private static void ex5() {
         System.out.println("=======================> Ex 5 <=======================");
+        BinaryRelation symmetricPart = PRelation.symmetricPart();
+        System.out.println("Symmetric part");
+        System.out.println(symmetricPart);
+        BinaryRelation relationFactorization = PRelation.relationFactorization(symmetricPart.get());
         System.out.println("Relation factorization");
-        BinaryRelation relationFactorization = PRelation.relationFactorization(PRelation.symmetricPart().get());
         System.out.println(relationFactorization);
     }
 
@@ -58,7 +110,7 @@ public class Main {
         System.out.println("Dominant relation");
         System.out.println(PRelation.asymmetricPart());
         System.out.println("Ignorant relation");
-        System.out.println(PRelation.asymmetricPart());
+        System.out.println(PRelation.symmetricPart());
         System.out.println("Disparity relation");   // непорівняльності
         System.out.println(PRelation.disparity());
     }
@@ -68,7 +120,7 @@ public class Main {
         System.out.println("Transitive closure");
         BinaryRelation transitiveClosure = RRelation.transitiveClosure();
         System.out.println(transitiveClosure);
-        System.out.println("Transitive closure");
+        System.out.println("Symmetric part");
         BinaryRelation mutualReach = RRelation.mutualReach();
         System.out.println(mutualReach);
     }
@@ -76,16 +128,18 @@ public class Main {
     private static void ex1() {
         System.out.println("=======================> Ex 1 <=======================");
         System.out.println("Composition:");
-        BinaryRelation composition = PRelation.composition(QRelation);
+        BinaryRelation composition = QRelation.composition(RRelation);
         System.out.println(composition);
 
         System.out.println("Symmetric difference:");
-        BinaryRelation symmetricDifference = QRelation.symmetricDifference(PRelation);
+        BinaryRelation symmetricDifference = QRelation.symmetricDifference(RRelation);
         System.out.println(symmetricDifference);
     }
 
     private static void ex2() {
         System.out.println("=======================> Ex 2 <=======================");
+        System.out.println("Q:");
+        System.out.println(QRelation);
         QRelation.printRelationType();
     }
 }

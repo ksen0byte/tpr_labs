@@ -327,7 +327,7 @@ public class BinaryRelation implements Relation {
         BinaryRelation transposedMatrix = this.transpose();
         BinaryRelation intersection = this.intersection(transposedMatrix);
         int size = intersection.get().length;
-        return intersection.isPartOf(new BinaryRelation(MatrixType.DIAGONAL, size));
+        return intersection.isPartOf(new BinaryRelation(MatrixType.DIAGONAL, size)) && !isAsymmetric();
     }
 
     @Override
@@ -485,9 +485,9 @@ public class BinaryRelation implements Relation {
         if (binaryRelation.isReflective()) {
             System.out.println("reflective");
         }
-        if (binaryRelation.isAntiReflective()) {
-            System.out.println("anti reflective");
-        }
+//        if (binaryRelation.isAntiReflective()) {
+//            System.out.println("anti reflective");
+//        }
         if (binaryRelation.isSymmetric()) {
             System.out.println("symmetric");
         }
@@ -539,26 +539,109 @@ public class BinaryRelation implements Relation {
     }
 
     @Override
-    public Double findDistance(BinaryRelation that) {
-        int[][] m1 = new int[size][size];
-        int[][] m2 = new int[size][size];
+    public String findDistance(BinaryRelation that) {
+        Integer[][] m1 = new Integer[size][size];
+        Integer[][] m2 = new Integer[size][size];
 
         // creating mMatrix
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                m1[i][j] = this.matrix[i][j] - this.matrix[j][i];
-                m2[i][j] = that.matrix[i][j] - that.matrix[j][i];
+                m1[i][j] = this.matrix[i][j] == 0 && this.matrix[j][i] == 0 ? null : this.matrix[i][j] - this.matrix[j][i];
+                m2[i][j] = that.matrix[i][j] == 0 && that.matrix[j][i] == 0 ? null : that.matrix[i][j] - that.matrix[j][i];
             }
         }
+//        System.out.println(Arrays.deepToString(m1));
+//        System.out.println(Arrays.deepToString(m2));
 
         double distance = 0.;
+        Integer tetaSum = 0;
         for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                distance += abs(m1[i][j] - m2[i][j]);
+            for (int j = i + 1; j < size; j++) {
+                Integer m1El = m1[i][j];
+                Integer m2El = m2[i][j];
+                if (m1El == null || m2El == null) {
+                    tetaSum++;
+                } else {
+                    distance += abs(m1El - m2El);
+                }
             }
         }
 
-        return distance * 0.5;
+        return tetaSum + "W + " + distance;
     }
 
+    @Override
+    public List<Integer> max() {
+        List<Integer> max = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            boolean condition = true;
+            for (int j = 0; j < size; j++) {
+                if (matrix[i][j] != 1) {
+                    condition = false;
+                    break;
+                }
+            }
+            if (condition) {
+                max.add(i + 1);
+            }
+        }
+        return max;
+    }
+
+    @Override
+    public List<Integer> min() {
+        List<Integer> min = new ArrayList<>();
+        boolean cond = true;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (!cond || matrix[j][i] != 1) {
+                    cond = false;
+                }
+            }
+            if (cond) {
+                min.add(i + 1);
+            } else {
+                cond = true;
+            }
+        }
+        return min;
+    }
+
+    @Override
+    public List<Integer> major() {
+        List<Integer> major = new ArrayList<>();
+        boolean cond = true;
+        for (int i = 0; i < size; i++) {
+            boolean condition = true;
+            for (int j = 0; j < size; j++) {
+                if (matrix[j][i] != 0) {
+                    condition = false;
+                    break;
+                }
+            }
+            if (condition) {
+                major.add(i + 1);
+            }
+        }
+        return major;
+    }
+
+    @Override
+    public List<Integer> minor() {
+        List<Integer> minor = new ArrayList<>();
+        boolean cond = true;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (!cond || matrix[i][j] != 0) {
+                    cond = false;
+                }
+            }
+            if (cond) {
+                minor.add(i + 1);
+            } else {
+                cond = true;
+            }
+        }
+        return minor;
+    }
 }

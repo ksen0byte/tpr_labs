@@ -15,12 +15,23 @@ public class Main {
     public static void main(String[] args) {
         findLinearDistance();
 
+        findMetricDistance();
+
+        findStructuralDistance();
+    }
+
+    private static void findMetricDistance() {
         MetricRelation s = new MetricRelation(new Double[][]{
                 {0., 1., -1., 2., -1.},
                 {-1., 0., -2., 1., -2.},
                 {1., 2., 0., 3., 0.},
                 {-2., -1., -3., 0., -3.},
                 {1., 2., 0., 3., 0.},
+//                {0.0, -3.0, -3.0, -1., -1.},
+//                {3.,0.,0.,},
+//                {},
+//                {},
+//                {},
         });
 
         MetricRelation t = new MetricRelation(new Double[][]{
@@ -38,8 +49,6 @@ public class Main {
         System.out.println("Distance:");
         System.out.println(s.findDistance(t));
         System.out.println("================================================================================================");
-
-        findStructuralDistance();
     }
 
     private static void findLinearDistance() {
@@ -50,13 +59,20 @@ public class Main {
                 new Intersection.Holder(4, Arrays.asList(4, 5)),
                 new Intersection.Holder(5, Arrays.asList(2, 3, 5))
         ));
-        BinaryRelation r = intersection.getBinaryRelation(5);
+//        BinaryRelation r = intersection.getBinaryRelation(5);
+        BinaryRelation r = new BinaryRelation(new int[][]{
+                {1, 0, 0, 0, 0},
+                {1, 1, 0, 0, 0},
+                {1, 1, 1, 1, 1},
+                {1, 1, 0, 1, 0},
+                {0, 0, 0, 0, 1},
+        });
         BinaryRelation q = new BinaryRelation(new int[][]{
                 {1, 0, 0, 0, 0},
                 {0, 1, 0, 0, 0},
-                {1, 1, 1, 1, 1},
+                {0, 1, 1, 0, 0},
                 {0, 0, 0, 1, 0},
-                {1, 0, 0, 0, 1},
+                {0, 0, 1, 1, 1},
         });
         System.out.println("R: ");
         System.out.println(r);
@@ -97,13 +113,19 @@ public class Main {
 //                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 //        });
         BinaryRelation br1 = new BinaryRelation(new int[][]{
-                {1, 0, 0, 0, 0},
-                {0, 1, 0, 0, 0},
-                {1, 1, 1, 1, 1},
-                {0, 0, 0, 1, 0},
-                {1, 0, 0, 0, 1},
+                {1, 1, 0, 0, 0},
+                {1, 1, 0, 0, 0},
+                {0, 0, 1, 1, 1},
+                {0, 0, 1, 1, 1},
+                {0, 0, 1, 1, 1},
         });
-        BinaryRelation br2 = br1.symmetricPart();
+        BinaryRelation br2 = new BinaryRelation(new int[][]{
+                {1, 1, 0, 0, 1},
+                {1, 1, 0, 0, 1},
+                {0, 0, 1, 0, 0},
+                {0, 0, 0, 1, 0},
+                {1, 1, 0, 0, 1},
+        });
         List<FactorizationClass> classes1 = br1.getClassesForFactorization(br1.get());
         System.out.println(classes1);
         List<FactorizationClass> classes2 = br2.getClassesForFactorization(br2.get());
@@ -136,6 +158,7 @@ public class Main {
             int count = countClasses(result, fc1);
             subClasses2.add(count);
         });
+        System.out.println(subClasses1);
         System.out.println(subClasses2);
 
         double distance = 0;
@@ -145,7 +168,7 @@ public class Main {
         }
         for (int i = 0; i < classes2.size(); i++) {
             int s2 = classes2.get(i).getElements().size();
-            distance += (2 * (s2 - subClasses2.get(i)) - subClasses2.get(i) + 1);
+            distance += (2 * (s2 - subClasses2.size()) - subClasses2.get(i) + 1);
         }
         System.out.println("==================================================== Structural distance ====================================================");
         System.out.println(distance);
